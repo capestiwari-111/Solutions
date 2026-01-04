@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Made by Virat tiwari</title>
+    <style>
+        :root { --glow: #7b2ff7; --accent: #00d4ff; }
+        body {
+            margin: 0;
+            background: #050510 url('https://www.transparenttextures.com/patterns/stardust.png');
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        h1 { 
+            font-size: 2.5rem; 
+            text-shadow: 0 0 20px var; 
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .promo { color: var(--accent); margin-bottom: 20px; font-size: 0.9rem; }
+        a { color: #ff00c8; text-decoration: none; font-weight: bold; }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        select, input, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: none;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        select, input { background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        button {
+            background: linear-gradient(45deg, var(--glow), var(--accent));
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--accent); }
+        #res {
+            margin-top: 10px;
+            padding: 15px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 15px;
+            border-left: 4px solid var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+<h1>Made by Virat tiwari</h1>
+<p class="promo">For promotion,Ads contact: <a href="mailto:capestiwari@gmail.com">capestiwari@gmail.com</a></p>
+
+<div class="card">
+    <select id="mode">
+        <option value="simplify">Simplify</option>
+        <option value="factor">Factorize</option>
+        <option value="derive">Derive (d/dx)</option>
+        <option value="integrate">Integrate</option>
+    </select>
+    <input type="text" id="in" placeholder="Enter your question here..." autocomplete="off">
+    <button onclick="solve()">click to get solution</button>
+    <div id="res">Waiting for input...</div>
+</div>
+
+<script>
+    document.getElementById('in').addEventListener('keypress', (e) => e.key === 'Enter' && solve());
+
+    async function solve() {
+        const q = document.getElementById('in').value;
+        const mode = document.getElementById('mode').value;
+        const r = document.getElementById('res');
+        if (!q) return;
+
+        r.innerHTML = "<i>wait bro let me answer...</i>";
+        try {
+            const res = await fetch(`https://newton.now.sh/api/v2/${mode}/${encodeURIComponent(q)}`);
+            const d = await res.json();
+            r.innerHTML = d.result ? `Result: <b>${d.result}</b>` : "Syntax error!";
+        } catch (e) {
+            r.innerText = "Connection lost in space.";
+        }
+    }
+</script>
+
+</body>
+</html>
